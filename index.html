@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KIRAN EXPRESS</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f6ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #1e40af;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .main-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      display: flex;
+      gap: 20px;
+      padding: 0 15px;
+    }
+
+    .container, .manager {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1e40af;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      background: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1e3a8a;
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 15px;
+      background: #e0f2fe;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .manager p {
+      margin: 10px 0;
+      font-size: 15px;
+    }
+
+    .manager span {
+      font-weight: bold;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🚆 KIRAN EXPRESS BOOKING</h1>
+</header>
+
+<div class="main-container">
+
+  <!-- Booking Form -->
+  <div class="container">
+    <h2>Book Your Ticket</h2>
+
+    <label>From</label>
+    <input type="text" id="from" placeholder="Enter source station">
+
+    <label>To</label>
+    <input type="text" id="to" placeholder="Enter destination station">
+
+    <label>Date of Journey</label>
+    <input type="date" id="date">
+
+    <label>Class</label>
+    <select id="class">
+      <option>Sleeper</option>
+      <option>AC 3 Tier</option>
+      <option>AC 2 Tier</option>
+      <option>First Class</option>
+    </select>
+
+    <label>Number of Passengers</label>
+    <input type="number" id="passengers" min="1" value="1">
+
+    <button onclick="bookTicket()">Book Ticket</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <!-- Manager Details -->
+  <div class="manager">
+    <h2>Manager Details</h2>
+    <p><span>Name:</span> Utkarsh Maggo</p>
+    <p><span>Designation:</span> Booking Manager</p>
+    <p><span>Phone:</span> +91 70153 00933</p>
+    <p><span>Email:</span> manager@kiranbooking.com</p>
+    <p><span>Office Time:</span> 9:00 AM – 6:00 PM</p>
+    <p><span>Office:</span> Rampura,Yamuna nagar</p>
+  </div>
+
+</div>
+
+<script>
+  function bookTicket() {
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const date = document.getElementById('date').value;
+    const travelClass = document.getElementById('class').value;
+    const passengers = document.getElementById('passengers').value;
+
+    if (!from || !to || !date) {
+      alert('Please fill all details');
+      return;
+    }
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+      <h3>✅ Booking Successful</h3>
+      <p><strong>From:</strong> ${from}</p>
+      <p><strong>To:</strong> ${to}</p>
+      <p><strong>Date:</strong> ${date}</p>
+      <p><strong>Class:</strong> ${travelClass}</p>
+      <p><strong>Passengers:</strong> ${passengers}</p>
+      <p><strong>Status:</strong> Confirmed</p>
+    `;
+  }
+</script>
+
+</body>
+</html>
+
