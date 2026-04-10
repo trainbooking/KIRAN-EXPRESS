@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KIRAN RNDI TRAIN SERVICE</title>
+
+  <!-- QR Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+  <!-- SMTP Email Demo -->
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+
+  <!-- PDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Loading GIF -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:#fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #d00000;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background: white;
+      padding: 10px;
+      gap: 18px;
+      border-bottom: 3px solid #d00000;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      background: #ffe3e3;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #990000;
+    }
+
+    .active {
+      background: #d00000;
+      color: white;
+    }
+
+    .main-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      display: flex;
+      gap: 20px;
+      padding: 0 15px;
+    }
+
+    .container, .contact-box, .about-box {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+
+    /* Manager Sidebar */
+    .manager-box {
+      width: 300px;
+      background: #ffe3e3;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    .photo-box {
+      width: 130px;
+      height: 130px;
+      background: #fff;
+      border-radius: 10px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px dashed #d00000;
+      font-weight: bold;
+      color: #d00000;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+      color:#b50000;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background: #d00000;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover { background:#a40000; }
+
+    /* Ticket */
+    .ticket {
+      width: 320px;
+      padding: 20px;
+      background: white;
+      border-left: 4px solid #d00000;
+      border-right: 4px solid #d00000;
+      border-radius: 14px;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.9); opacity:0; }
+      to { transform: scale(1); opacity:1; }
+    }
+
+    /* Loading GIFs */
+    .gif-box { text-align:center; margin-top:20px; }
+    .gif-box img { width:200px; border-radius:10px; }
+
+    /* Music Player */
+    .music-box { text-align:center; margin-top:15px; }
+    .music-btn {
+      background:#990000;
+      padding:10px 15px;
+      width:auto;
+    }
+
+    .contact-box, .about-box { display:none; }
+
+  </style>
+</head>
+
+<body>
+
+<header>🚆 KIRAN RNDI TRAIN SERVICE</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="openTab('booking')">Personal Booking</div>
+  <div class="tab" onclick="openTab('contact')">Contact Us</div>
+  <div class="tab" onclick="openTab('about')">About Us</div>
+</div>
+
+<div class="main-container">
+
+  <!-- BOOKING FORM -->
+  <div class="container" id="booking">
+    <h2 style="text-align:center;color:#d00000;">Book Your Ticket</h2>
+
+    <label>From</label>
+    <input id="from">
+
+    <label>To</label>
+    <input id="to">
+
+    <label>Date</label>
+    <input type="date" id="date">
+
+    <label>Class</label>
+    <select id="class">
+      <option>Sleeper</option>
+      <option>AC 3 Tier</option>
+      <option>AC 2 Tier</option>
+      <option>First Class</option>
+    </select>
+
+    <label>Passengers</label>
+    <input type="number" id="passengers" min="1" value="1">
+
+    <button onclick="checkFare()">Check Fare</button>
+    <p id="fareResult" style="font-weight:bold;color:#d00000;font-size:18px;"></p>
+
+    <button onclick="bookTicket()">Book Ticket</button>
+
+    <div class="result" id="result"></div>
+
+    <!-- GIF ANIMATIONS -->
+    <div class="gif-box">
+      <img src="https://media.tenor.com/ZQfC7EIgEusAAAAC/train.gif">
+      <img src="https://media.tenor.com/BHvdA6uPvxkAAAAC/loading.gif">
+      <img src="https://media.tenor.com/jgG_MdCLL6YAAAAC/travel-flight.gif">
+    </div>
+
+    <!-- MUSIC -->
+    <div class="music-box">
+      <audio id="bgm" loop>
+        <source src="https://files.catbox.moe/ij19fr.mp3">
+      </audio>
+      <button class="music-btn" onclick="toggleMusic()">Play / Pause Music</button>
+    </div>
+
+  </div>
+
+  <!-- MANAGER SIDEBAR -->
+  <div class="manager-box">
+    <div class="photo-box">Photo</div>
+    <h3 style="text-align:center;color:#d00000;">Manager</h3>
+
+    <p><b>Name:</b> Utkarsh Maggo</p>
+    <p><b>Phone:</b> +91 7015300933</p>
+    <p><b>Email:</b> hotkiranservice@gmail.com</p>
+
+    <button onclick="openWhatsApp()">Chat on WhatsApp</button>
+  </div>
+
+</div>
+
+<!-- CONTACT TAB -->
+<div class="contact-box" id="contact">
+  <h2 style="text-align:center;color:#d00000;">Contact Us</h2>
+  <p style="font-size:18px;line-height:26px;">
+    📍 <b>Office:</b> Rampura, Yamuna Nagar<br>
+    📞 <b>Manager Phone:</b> +91 7015300933<br>
+    ✉ <b>Email:</b> hotkiranservice@gmail.com
+  </p>
+</div>
+
+<!-- ABOUT US TAB -->
+<div class="about-box" id="about">
+  <h2 style="text-align:center;color:#d00000;">About Us</h2>
+
+  <p style="font-size:17px;line-height:26px;">
+    <b>KIRAN RNDI TRAIN SERVICE</b> is a dedicated and fast-growing personal
+    ticket booking service designed to provide hassle-free railway bookings
+    to passengers across India.  
+    <br><br>
+    Our service focuses on:
+    <br>✔ Fast & easy ticket booking  
+    <br>✔ Customer-friendly service  
+    <br>✔ Verified booking manager  
+    <br>✔ 24×7 WhatsApp Support  
+    <br><br>
+    We ensure safe, smooth and quick booking experience with no hidden charges.
+  </p>
+</div>
+
+<script>
+function openTab(tab) {
+  document.getElementById("booking").style.display = (tab === "booking") ? "block" : "none";
+  document.getElementById("contact").style.display = (tab === "contact") ? "block" : "none";
+  document.getElementById("about").style.display = (tab === "about") ? "block" : "none";
+
+  const tabs = document.querySelectorAll(".tab");
+  tabs.forEach(t => t.classList.remove("active"));
+  event.target.classList.add("active");
+}
+
+// WhatsApp
+function openWhatsApp() {
+  window.open("https://wa.me/917015300933", "_blank");
+}
+
+// Fare
+function fareCalculator(cls) {
+  if (cls === "Sleeper") return 120;
+  if (cls === "AC 3 Tier") return 350;
+  if (cls === "AC 2 Tier") return 550;
+  return 900;
+}
+
+function checkFare() {
+  let cls = document.getElementById("class").value;
+  let passengers = document.getElementById("passengers").value;
+  let total = fareCalculator(cls) * passengers;
+
+  document.getElementById("fareResult").innerHTML =
+    "Total Fare: ₹ " + total;
+}
+
+// Generate Ticket ID
+function generateTicketID() {
+  return "KR" + Math.floor(Math.random() * 999999);
+}
+
+// BOOK TICKET
+function bookTicket() {
+
+  let from = document.getElementById('from').value;
+  let to = document.getElementById('to').value;
+  let date = document.getElementById('date').value;
+  let cls = document.getElementById('class').value;
+  let passengers = document.getElementById('passengers').value;
+
+  if (!from || !to || !date) {
+    alert("Fill all details!");
+    return;
+  }
+
+  let ticketID = generateTicketID();
+  let fare = fareCalculator(cls) * passengers;
+
+  // Show ticket
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").innerHTML = `
+    <div class='ticket'>
+      <h3 style="color:#d00000;text-align:center;">KIRAN RNDI TRAIN SERVICE</h3>
+      <p><b>Ticket ID:</b> ${ticketID}</p>
+      <p><b>From:</b> ${from}</p>
+      <p><b>To:</b> ${to}</p>
+      <p><b>Date:</b> ${date}</p>
+      <p><b>Class:</b> ${cls}</p>
+      <p><b>Passengers:</b> ${passengers}</p>
+      <p><b>Total Fare:</b> ₹ ${fare}</p>
+
+      <div style="text-align:center;">
+        <canvas id="qr"></canvas>
+      </div>
+
+      <button onclick="downloadPDF('${from}','${to}','${date}','${cls}','${passengers}','${ticketID}','${fare}')">Download PDF</button>
+    </div>
+  `;
+
+  // QR → WhatsApp
+  let qr = new QRious({
+    element: document.getElementById('qr'),
+    size: 150,
+    value: "https://wa.me/917015300933"
+  });
+}
+
+// MUSIC
+function toggleMusic() {
+  let bgm = document.getElementById("bgm");
+  if (bgm.paused) bgm.play();
+  else bgm.pause();
+}
+
+// PDF Generator
+async function downloadPDF(from,to,date,cls,p,ticketID,fare) {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation:"portrait", unit:"px", format:[320,600] });
+
+  pdf.setFontSize(18);
+  pdf.text("KIRAN RNDI TRAIN SERVICE", 40,40);
+
+  pdf.setFontSize(12);
+  pdf.text(`Ticket ID: ${ticketID}`, 20,90);
+  pdf.text(`From: ${from}`, 20,120);
+  pdf.text(`To: ${to}`, 20,150);
+  pdf.text(`Date: ${date}`, 20,180);
+  pdf.text(`Class: ${cls}`, 20,210);
+  pdf.text(`Passengers: ${p}`, 20,240);
+  pdf.text(`Fare: ₹${fare}`, 20,270);
+
+  let qrCanvas = document.getElementById("qr");
+  pdf.addImage(qrCanvas.toDataURL(), "PNG", 70, 300, 150,150);
+
+  pdf.save(`Ticket_${ticketID}.pdf`);
+}
+
+</script>
+
+</body>
+</html>
